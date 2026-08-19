@@ -1,0 +1,28 @@
+{
+  "name": "obsidian-equilibrium-goz",
+  "version": "1.0.0",
+  "description": "Equilibrium GOZ Engine for Obsidian - 4 Zones, GTD Inbox & Habit Mastery",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "node esbuild.config.mjs production"
+  },
+  "keywords": [
+    "obsidian",
+    "obsidian-plugin",
+    "gtd",
+    "habits",
+    "gamification",
+    "growth"
+  ],
+  "author": "Nelxson2099",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "^0.21.0",
+    "obsidian": "^1.5.0",
+    "tslib": "^2.6.0",
+    "typescript": "^5.4.0"
+  }
+}
