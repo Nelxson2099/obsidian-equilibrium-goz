@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.png" width="220" alt="Equilibrium GOZ Mascot Logo" />
+</p>
+
 # Equilibrium GOZ — 4 Zones, GTD Inbox & Habit Mastery Engine for Obsidian
 
 [![Obsidian Plugin](https://img.shields.io/badge/Obsidian-Plugin-6366F1?style=for-the-badge&logo=obsidian&logoColor=white)](https://obsidian.md)
