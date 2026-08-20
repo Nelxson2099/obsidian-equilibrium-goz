@@ -82,7 +82,7 @@ var EquilibriumGOZView = class extends import_obsidian.ItemView {
     this.render();
   }
   render() {
-    const container = this.containerEl.children[1];
+    const container = this.contentEl;
     container.empty();
     container.addClass("goz-container");
     const data = this.plugin.data;
@@ -308,7 +308,8 @@ var EquilibriumGOZPlugin = class extends import_obsidian2.Plugin {
   onunload() {
   }
   async loadPluginData() {
-    this.data = Object.assign({}, DEFAULT_DATA, await this.loadData());
+    const loadedData = await this.loadData();
+    this.data = Object.assign({}, DEFAULT_DATA, loadedData != null ? loadedData : {});
   }
   async savePluginData() {
     await this.saveData(this.data);

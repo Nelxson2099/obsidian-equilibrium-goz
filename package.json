@@ -1,6 +1,6 @@
 {
   "name": "obsidian-equilibrium-goz",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Equilibrium GOZ Engine for Obsidian - 4 Zones, GTD Inbox & Habit Mastery",
   "main": "main.js",
   "scripts": {

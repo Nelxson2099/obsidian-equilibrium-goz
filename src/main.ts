@@ -15,13 +15,13 @@ const DEFAULT_DATA: GOZData = {
 export default class EquilibriumGOZPlugin extends Plugin {
   data: GOZData = DEFAULT_DATA;
 
-  async onload() {
+  async onload(): Promise<void> {
     await this.loadPluginData();
 
     // Register View
     this.registerView(
       VIEW_TYPE_EQUILIBRIUM,
-      (leaf) => new EquilibriumGOZView(leaf, this)
+      (leaf: WorkspaceLeaf) => new EquilibriumGOZView(leaf, this)
     );
 
     // Ribbon Icon
@@ -39,19 +39,20 @@ export default class EquilibriumGOZPlugin extends Plugin {
     });
   }
 
-  onunload() {
+  onunload(): void {
     // Clean unload without console logging
   }
 
-  async loadPluginData() {
-    this.data = Object.assign({}, DEFAULT_DATA, await this.loadData());
+  async loadPluginData(): Promise<void> {
+    const loadedData = (await this.loadData()) as Partial<GOZData> | null;
+    this.data = Object.assign({}, DEFAULT_DATA, loadedData ?? {});
   }
 
-  async savePluginData() {
+  async savePluginData(): Promise<void> {
     await this.saveData(this.data);
   }
 
-  async activateView() {
+  async activateView(): Promise<void> {
     const { workspace } = this.app;
     let leaf: WorkspaceLeaf | null = null;
     const leaves = workspace.getLeavesOfType(VIEW_TYPE_EQUILIBRIUM);

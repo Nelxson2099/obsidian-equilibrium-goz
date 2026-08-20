@@ -31,7 +31,7 @@ export class EquilibriumGOZView extends ItemView {
   }
 
   render(): void {
-    const container = this.containerEl.children[1] as HTMLElement;
+    const container = this.contentEl;
     container.empty();
     container.addClass("goz-container");
 
@@ -137,7 +137,7 @@ export class EquilibriumGOZView extends ItemView {
     box.createEl("h4", { text: "⚡ Captura Rápida de Tarea (Inbox GTD)" });
 
     const inputGroup = box.createEl("div", { cls: "goz-input-group" });
-    const input = inputGroup.createEl("input", { cls: "goz-input", attr: { placeholder: "Escribe tu tarea o idea..." } });
+    const input = inputGroup.createEl("input", { cls: "goz-input", attr: { placeholder: "Escribe tu tarea o idea..." } }) as HTMLInputElement;
     const addBtn = inputGroup.createEl("button", { cls: "goz-btn-primary", text: "+ Capturar" });
 
     let selectedContext = CONTEXTS[0].tag;
@@ -170,7 +170,7 @@ export class EquilibriumGOZView extends ItemView {
     };
 
     addBtn.onclick = addGTD;
-    input.onkeydown = (e) => { if (e.key === "Enter") addGTD(); };
+    input.onkeydown = (e: KeyboardEvent) => { if (e.key === "Enter") addGTD(); };
 
     // TASK LIST
     el.createEl("h3", { text: "📥 Bandeja de Entrada" });
@@ -228,9 +228,9 @@ export class EquilibriumGOZView extends ItemView {
     const box = el.createEl("div", { cls: "goz-gtd-box" });
     box.createEl("h4", { text: "🚀 Registrar Nueva Expansión" });
 
-    const inputDesc = box.createEl("input", { cls: "goz-input goz-mb-10", attr: { placeholder: "¿Qué zona desafiaste hoy?" } });
+    const inputDesc = box.createEl("input", { cls: "goz-input goz-mb-10", attr: { placeholder: "¿Qué zona desafiaste hoy?" } }) as HTMLInputElement;
 
-    const selectZone = box.createEl("select", { cls: "goz-input goz-mb-10" });
+    const selectZone = box.createEl("select", { cls: "goz-input goz-mb-10" }) as HTMLSelectElement;
     ZONES.forEach(z => {
       const opt = selectZone.createEl("option", { text: `${z.icon} Zona de ${z.name}` });
       opt.value = z.id.toString();
