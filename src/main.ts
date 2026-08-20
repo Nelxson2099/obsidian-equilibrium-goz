@@ -40,7 +40,7 @@ export default class EquilibriumGOZPlugin extends Plugin {
   }
 
   onunload(): void {
-    // Clean unload without console logging
+    // Clean unload
   }
 
   async loadPluginData(): Promise<void> {
@@ -70,7 +70,7 @@ export default class EquilibriumGOZPlugin extends Plugin {
     }
 
     if (leaf) {
-      workspace.revealLeaf(leaf);
+      workspace.setActiveLeaf(leaf, { focus: true });
     }
   }
 }

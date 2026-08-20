@@ -39,24 +39,24 @@ export class EquilibriumGOZView extends ItemView {
     const currentLevel = this.getLevelInfo(data.totalXP);
 
     // 1. HEADER RPG BANNER
-    const header = container.createEl("div", { cls: "goz-header-banner" });
-    const levelInfo = header.createEl("div", { cls: "goz-level-info" });
+    const header = container.createDiv({ cls: "goz-header-banner" });
+    const levelInfo = header.createDiv({ cls: "goz-level-info" });
     
-    const badge = levelInfo.createEl("div", { cls: "goz-level-badge" });
-    badge.createEl("span", { cls: "goz-level-icon", text: currentLevel.icon });
-    const titleBox = badge.createEl("div");
-    titleBox.createEl("div", { cls: "goz-level-title", text: `Nivel ${currentLevel.level} — ${currentLevel.name}` });
-    titleBox.createEl("div", { cls: "goz-level-rank", text: `🔥 Racha: ${data.streakDays} días (Multiplicador Activo)` });
+    const badge = levelInfo.createDiv({ cls: "goz-level-badge" });
+    badge.createSpan({ cls: "goz-level-icon", text: currentLevel.icon });
+    const titleBox = badge.createDiv();
+    titleBox.createDiv({ cls: "goz-level-title", text: `Nivel ${currentLevel.level} — ${currentLevel.name}` });
+    titleBox.createDiv({ cls: "goz-level-rank", text: `🔥 Racha: ${data.streakDays} días (Multiplicador Activo)` });
 
-    levelInfo.createEl("div", { cls: "goz-xp-badge", text: `${data.totalXP.toLocaleString()} XP` });
+    levelInfo.createDiv({ cls: "goz-xp-badge", text: `${data.totalXP.toLocaleString()} XP` });
 
-    const progressBg = header.createEl("div", { cls: "goz-progress-bar-bg" });
-    const progressFill = progressBg.createEl("div", { cls: "goz-progress-bar-fill" });
+    const progressBg = header.createDiv({ cls: "goz-progress-bar-bg" });
+    const progressFill = progressBg.createDiv({ cls: "goz-progress-bar-fill" });
     const progressPct = Math.min(100, Math.max(5, (data.totalXP / currentLevel.maxXP) * 100));
     progressFill.setCssProps({ width: `${progressPct}%` });
 
     // 2. NAV TABS
-    const tabs = container.createEl("div", { cls: "goz-tabs" });
+    const tabs = container.createDiv({ cls: "goz-tabs" });
     const tabList = [
       { id: "dashboard", label: "📊 Dashboard" },
       { id: "gtd", label: `📥 GTD Inbox (${data.gtdTasks.filter(t => t.status !== 'completed').length})` },
@@ -76,7 +76,7 @@ export class EquilibriumGOZView extends ItemView {
     });
 
     // 3. TAB CONTENT
-    const content = container.createEl("div");
+    const content = container.createDiv();
 
     if (this.currentTab === "dashboard") {
       this.renderDashboard(content, data);
@@ -98,14 +98,14 @@ export class EquilibriumGOZView extends ItemView {
 
   private renderDashboard(el: HTMLElement, data: GOZData): void {
     // 4 ZONES GRID
-    const grid = el.createEl("div", { cls: "goz-zones-grid" });
+    const grid = el.createDiv({ cls: "goz-zones-grid" });
     ZONES.forEach(zone => {
       const count = data.activities.filter(a => a.zona_id === zone.id).length;
-      const card = grid.createEl("div", { cls: `goz-zone-card zone-${zone.id}` });
+      const card = grid.createDiv({ cls: `goz-zone-card zone-${zone.id}` });
       
-      const cardHeader = card.createEl("div", { cls: "goz-zone-header" });
-      cardHeader.createEl("span", { cls: `goz-zone-title-${zone.id}`, text: `${zone.icon} ${zone.name}` });
-      cardHeader.createEl("span", { cls: `goz-zone-count goz-zone-title-${zone.id}`, text: `${count}` });
+      const cardHeader = card.createDiv({ cls: "goz-zone-header" });
+      cardHeader.createSpan({ cls: `goz-zone-title-${zone.id}`, text: `${zone.icon} ${zone.name}` });
+      cardHeader.createSpan({ cls: `goz-zone-count goz-zone-title-${zone.id}`, text: `${count}` });
       
       card.createEl("p", { cls: "goz-opacity-muted", text: `Expansiones registradas en ${zone.name}` });
     });
@@ -117,9 +117,9 @@ export class EquilibriumGOZView extends ItemView {
     } else {
       data.activities.slice(-5).reverse().forEach(act => {
         const zone = ZONES.find(z => z.id === act.zona_id) || ZONES[0];
-        const item = el.createEl("div", { cls: `goz-task-item zone-${zone.id}` });
-        item.createEl("span", { text: `${zone.icon} ${act.descripcion}` });
-        item.createEl("span", { cls: "goz-opacity-muted", text: new Date(act.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+        const item = el.createDiv({ cls: `goz-task-item zone-${zone.id}` });
+        item.createSpan({ text: `${zone.icon} ${act.descripcion}` });
+        item.createSpan({ cls: "goz-opacity-muted", text: new Date(act.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
       });
     }
 
@@ -133,18 +133,18 @@ export class EquilibriumGOZView extends ItemView {
   }
 
   private renderGTD(el: HTMLElement, data: GOZData): void {
-    const box = el.createEl("div", { cls: "goz-gtd-box" });
+    const box = el.createDiv({ cls: "goz-gtd-box" });
     box.createEl("h4", { text: "⚡ Captura Rápida de Tarea (Inbox GTD)" });
 
-    const inputGroup = box.createEl("div", { cls: "goz-input-group" });
-    const input = inputGroup.createEl("input", { cls: "goz-input", attr: { placeholder: "Escribe tu tarea o idea..." } }) as HTMLInputElement;
+    const inputGroup = box.createDiv({ cls: "goz-input-group" });
+    const input = inputGroup.createEl("input", { cls: "goz-input", attr: { placeholder: "Escribe tu tarea o idea..." } });
     const addBtn = inputGroup.createEl("button", { cls: "goz-btn-primary", text: "+ Capturar" });
 
     let selectedContext = CONTEXTS[0].tag;
 
-    const chips = box.createEl("div", { cls: "goz-context-chips" });
+    const chips = box.createDiv({ cls: "goz-context-chips" });
     CONTEXTS.forEach(c => {
-      const chip = chips.createEl("span", { cls: "goz-chip", text: c.tag });
+      const chip = chips.createSpan({ cls: "goz-chip", text: c.tag });
       chip.onclick = () => {
         selectedContext = c.tag;
         new Notice(`Contexto seleccionado: ${c.tag}`);
@@ -179,8 +179,8 @@ export class EquilibriumGOZView extends ItemView {
       el.createEl("p", { cls: "goz-opacity-muted", text: "¡Inbox totalmente despejado! 🚀" });
     } else {
       pending.forEach(t => {
-        const item = el.createEl("div", { cls: "goz-task-item" });
-        item.createEl("span", { text: `${t.title} (${t.context})` });
+        const item = el.createDiv({ cls: "goz-task-item" });
+        item.createSpan({ text: `${t.title} (${t.context})` });
 
         const completeBtn = item.createEl("button", { cls: "goz-btn-primary", text: "✓ Completar" });
         completeBtn.onclick = () => {
@@ -208,10 +208,10 @@ export class EquilibriumGOZView extends ItemView {
     }
 
     data.habits.forEach(h => {
-      const card = el.createEl("div", { cls: "goz-habit-card" });
-      const info = card.createEl("div");
-      info.createEl("div", { cls: "goz-fw-700", text: h.title });
-      info.createEl("div", { cls: "goz-opacity-muted", text: `Frecuencia: ${h.frequency.toUpperCase()} | 🔥 Racha: ${h.streak} períodos` });
+      const card = el.createDiv({ cls: "goz-habit-card" });
+      const info = card.createDiv();
+      info.createDiv({ cls: "goz-fw-700", text: h.title });
+      info.createDiv({ cls: "goz-opacity-muted", text: `Frecuencia: ${h.frequency.toUpperCase()} | 🔥 Racha: ${h.streak} períodos` });
 
       const btn = card.createEl("button", { cls: "goz-habit-btn", text: "Marcar Cumplido" });
       btn.onclick = () => {
@@ -225,12 +225,12 @@ export class EquilibriumGOZView extends ItemView {
   }
 
   private renderExpansionLog(el: HTMLElement, data: GOZData): void {
-    const box = el.createEl("div", { cls: "goz-gtd-box" });
+    const box = el.createDiv({ cls: "goz-gtd-box" });
     box.createEl("h4", { text: "🚀 Registrar Nueva Expansión" });
 
-    const inputDesc = box.createEl("input", { cls: "goz-input goz-mb-10", attr: { placeholder: "¿Qué zona desafiaste hoy?" } }) as HTMLInputElement;
+    const inputDesc = box.createEl("input", { cls: "goz-input goz-mb-10", attr: { placeholder: "¿Qué zona desafiaste hoy?" } });
 
-    const selectZone = box.createEl("select", { cls: "goz-input goz-mb-10" }) as HTMLSelectElement;
+    const selectZone = box.createEl("select", { cls: "goz-input goz-mb-10" });
     ZONES.forEach(z => {
       const opt = selectZone.createEl("option", { text: `${z.icon} Zona de ${z.name}` });
       opt.value = z.id.toString();
