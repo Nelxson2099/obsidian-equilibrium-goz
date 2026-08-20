@@ -1,5 +1,5 @@
 import { ItemView, WorkspaceLeaf, Notice } from "obsidian";
-import { GOZData, Activity, GTDTask, Habit } from "./types";
+import { GOZData, Activity, GTDTask } from "./types";
 import { ZONES, LEVELS, CONTEXTS } from "./constants";
 import EquilibriumGOZPlugin from "./main";
 
@@ -31,7 +31,7 @@ export class EquilibriumGOZView extends ItemView {
   }
 
   render(): void {
-    const container = this.containerEl.children[1];
+    const container = this.containerEl.children[1] as HTMLElement;
     container.empty();
     container.addClass("goz-container");
 
@@ -53,7 +53,7 @@ export class EquilibriumGOZView extends ItemView {
     const progressBg = header.createEl("div", { cls: "goz-progress-bar-bg" });
     const progressFill = progressBg.createEl("div", { cls: "goz-progress-bar-fill" });
     const progressPct = Math.min(100, Math.max(5, (data.totalXP / currentLevel.maxXP) * 100));
-    progressFill.style.width = `${progressPct}%`;
+    progressFill.setCssProps({ width: `${progressPct}%` });
 
     // 2. NAV TABS
     const tabs = container.createEl("div", { cls: "goz-tabs" });
@@ -101,36 +101,33 @@ export class EquilibriumGOZView extends ItemView {
     const grid = el.createEl("div", { cls: "goz-zones-grid" });
     ZONES.forEach(zone => {
       const count = data.activities.filter(a => a.zona_id === zone.id).length;
-      const card = grid.createEl("div", { cls: "goz-zone-card" });
-      card.style.borderColor = `${zone.color}40`;
+      const card = grid.createEl("div", { cls: `goz-zone-card zone-${zone.id}` });
       
       const cardHeader = card.createEl("div", { cls: "goz-zone-header" });
-      cardHeader.createEl("span", { text: `${zone.icon} ${zone.name}`, attr: { style: `color: ${zone.color}; font-weight: 700;` } });
-      cardHeader.createEl("span", { cls: "goz-zone-count", text: `${count}`, attr: { style: `color: ${zone.color};` } });
+      cardHeader.createEl("span", { cls: `goz-zone-title-${zone.id}`, text: `${zone.icon} ${zone.name}` });
+      cardHeader.createEl("span", { cls: `goz-zone-count goz-zone-title-${zone.id}`, text: `${count}` });
       
-      card.createEl("p", { text: `Expansiones registradas en ${zone.name}`, attr: { style: "font-size: 11px; opacity: 0.7;" } });
+      card.createEl("p", { cls: "goz-opacity-muted", text: `Expansiones registradas en ${zone.name}` });
     });
 
     // RECENT EXPANSION LOG
     el.createEl("h3", { text: "⚡ Últimas Expansiones Registradas" });
     if (data.activities.length === 0) {
-      el.createEl("p", { text: "Aún no has registrado actividades. ¡Haz un registro en la pestaña Expansión!", attr: { style: "opacity: 0.6;" } });
+      el.createEl("p", { cls: "goz-opacity-muted", text: "Aún no has registrado actividades. ¡Haz un registro en la pestaña Expansión!" });
     } else {
       data.activities.slice(-5).reverse().forEach(act => {
         const zone = ZONES.find(z => z.id === act.zona_id) || ZONES[0];
-        const item = el.createEl("div", { cls: "goz-task-item" });
-        item.style.borderLeft = `4px solid ${zone.color}`;
+        const item = el.createEl("div", { cls: `goz-task-item zone-${zone.id}` });
         item.createEl("span", { text: `${zone.icon} ${act.descripcion}` });
-        item.createEl("span", { text: new Date(act.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), attr: { style: "font-size: 11px; opacity: 0.6;" } });
+        item.createEl("span", { cls: "goz-opacity-muted", text: new Date(act.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
       });
     }
 
     // BACKUP JSON BUTTON
-    const backupBtn = el.createEl("button", { cls: "goz-btn-primary", text: "💾 Exportar Respaldo JSON" });
-    backupBtn.style.marginTop = "20px";
+    const backupBtn = el.createEl("button", { cls: "goz-btn-primary goz-mt-20", text: "💾 Exportar Respaldo JSON" });
     backupBtn.onclick = () => {
       const jsonStr = JSON.stringify(data, null, 2);
-      navigator.clipboard.writeText(jsonStr);
+      void navigator.clipboard.writeText(jsonStr);
       new Notice("¡Respaldo JSON copiado al portapapeles con éxito!");
     };
   }
@@ -140,7 +137,7 @@ export class EquilibriumGOZView extends ItemView {
     box.createEl("h4", { text: "⚡ Captura Rápida de Tarea (Inbox GTD)" });
 
     const inputGroup = box.createEl("div", { cls: "goz-input-group" });
-    const input = inputGroup.createEl("input", { cls: "goz-input", attr: { placeholder: "Escribe tu tarea o idea..." } }) as HTMLInputElement;
+    const input = inputGroup.createEl("input", { cls: "goz-input", attr: { placeholder: "Escribe tu tarea o idea..." } });
     const addBtn = inputGroup.createEl("button", { cls: "goz-btn-primary", text: "+ Capturar" });
 
     let selectedContext = CONTEXTS[0].tag;
@@ -148,8 +145,6 @@ export class EquilibriumGOZView extends ItemView {
     const chips = box.createEl("div", { cls: "goz-context-chips" });
     CONTEXTS.forEach(c => {
       const chip = chips.createEl("span", { cls: "goz-chip", text: c.tag });
-      chip.style.backgroundColor = `${c.color}20`;
-      chip.style.color = c.color;
       chip.onclick = () => {
         selectedContext = c.tag;
         new Notice(`Contexto seleccionado: ${c.tag}`);
@@ -168,7 +163,7 @@ export class EquilibriumGOZView extends ItemView {
         createdAt: new Date().toISOString()
       };
       data.gtdTasks.push(newTask);
-      this.plugin.savePluginData();
+      void this.plugin.savePluginData();
       new Notice("¡Tarea capturada al Inbox!");
       input.value = "";
       this.render();
@@ -181,19 +176,17 @@ export class EquilibriumGOZView extends ItemView {
     el.createEl("h3", { text: "📥 Bandeja de Entrada" });
     const pending = data.gtdTasks.filter(t => t.status !== 'completed');
     if (pending.length === 0) {
-      el.createEl("p", { text: "¡Inbox totalmente despejado! 🚀", attr: { style: "opacity: 0.6;" } });
+      el.createEl("p", { cls: "goz-opacity-muted", text: "¡Inbox totalmente despejado! 🚀" });
     } else {
       pending.forEach(t => {
         const item = el.createEl("div", { cls: "goz-task-item" });
         item.createEl("span", { text: `${t.title} (${t.context})` });
 
         const completeBtn = item.createEl("button", { cls: "goz-btn-primary", text: "✓ Completar" });
-        completeBtn.style.padding = "4px 10px";
-        completeBtn.style.fontSize = "11px";
         completeBtn.onclick = () => {
           t.status = 'completed';
           data.totalXP += 100;
-          this.plugin.savePluginData();
+          void this.plugin.savePluginData();
           new Notice("¡Tarea completada! +100 XP");
           this.render();
         };
@@ -211,20 +204,20 @@ export class EquilibriumGOZView extends ItemView {
         { id: "h2", title: "Entrenamiento Físico", frequency: "daily", zona_id: 4, streak: 5, completedPeriods: [] },
         { id: "h3", title: "Revisión de Proyectos & Metas", frequency: "weekly", zona_id: 4, streak: 2, completedPeriods: [] }
       ];
-      this.plugin.savePluginData();
+      void this.plugin.savePluginData();
     }
 
     data.habits.forEach(h => {
       const card = el.createEl("div", { cls: "goz-habit-card" });
       const info = card.createEl("div");
-      info.createEl("div", { text: h.title, attr: { style: "font-weight: 700;" } });
-      info.createEl("div", { text: `Frecuencia: ${h.frequency.toUpperCase()} | 🔥 Racha: ${h.streak} períodos`, attr: { style: "font-size: 11px; opacity: 0.7;" } });
+      info.createEl("div", { cls: "goz-fw-700", text: h.title });
+      info.createEl("div", { cls: "goz-opacity-muted", text: `Frecuencia: ${h.frequency.toUpperCase()} | 🔥 Racha: ${h.streak} períodos` });
 
       const btn = card.createEl("button", { cls: "goz-habit-btn", text: "Marcar Cumplido" });
       btn.onclick = () => {
         h.streak += 1;
         data.totalXP += 150;
-        this.plugin.savePluginData();
+        void this.plugin.savePluginData();
         new Notice(`¡Hábito marcado! 🔥 Racha: ${h.streak} | +150 XP`);
         this.render();
       };
@@ -235,11 +228,9 @@ export class EquilibriumGOZView extends ItemView {
     const box = el.createEl("div", { cls: "goz-gtd-box" });
     box.createEl("h4", { text: "🚀 Registrar Nueva Expansión" });
 
-    const inputDesc = box.createEl("input", { cls: "goz-input", attr: { placeholder: "¿Qué zona desafiaste hoy?" } }) as HTMLInputElement;
-    inputDesc.style.marginBottom = "10px";
+    const inputDesc = box.createEl("input", { cls: "goz-input goz-mb-10", attr: { placeholder: "¿Qué zona desafiaste hoy?" } });
 
-    const selectZone = box.createEl("select", { cls: "goz-input" }) as HTMLSelectElement;
-    selectZone.style.marginBottom = "10px";
+    const selectZone = box.createEl("select", { cls: "goz-input goz-mb-10" });
     ZONES.forEach(z => {
       const opt = selectZone.createEl("option", { text: `${z.icon} Zona de ${z.name}` });
       opt.value = z.id.toString();
@@ -263,7 +254,7 @@ export class EquilibriumGOZView extends ItemView {
       data.activities.push(newAct);
       data.totalXP += 250;
       data.streakDays += 1;
-      this.plugin.savePluginData();
+      void this.plugin.savePluginData();
       new Notice("¡Expansión registrada con éxito! +250 XP 🚀");
       this.render();
     };

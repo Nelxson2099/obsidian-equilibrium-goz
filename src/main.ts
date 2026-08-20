@@ -26,23 +26,21 @@ export default class EquilibriumGOZPlugin extends Plugin {
 
     // Ribbon Icon
     this.addRibbonIcon("target", "Equilibrium GOZ", () => {
-      this.activateView();
+      void this.activateView();
     });
 
     // Commands
     this.addCommand({
-      id: "open-equilibrium-goz-view",
-      name: "Abrir Panel Equilibrium GOZ",
+      id: "open-view",
+      name: "Abrir panel de control",
       callback: () => {
-        this.activateView();
+        void this.activateView();
       }
     });
-
-    console.log("Equilibrium GOZ Engine Plugin cargado exitosamente.");
   }
 
-  async onunload() {
-    console.log("Equilibrium GOZ Engine Plugin descargado.");
+  onunload() {
+    // Clean unload without console logging
   }
 
   async loadPluginData() {
@@ -62,10 +60,12 @@ export default class EquilibriumGOZPlugin extends Plugin {
       leaf = leaves[0];
     } else {
       leaf = workspace.getRightLeaf(false);
-      await leaf?.setViewState({
-        type: VIEW_TYPE_EQUILIBRIUM,
-        active: true,
-      });
+      if (leaf) {
+        await leaf.setViewState({
+          type: VIEW_TYPE_EQUILIBRIUM,
+          active: true,
+        });
+      }
     }
 
     if (leaf) {

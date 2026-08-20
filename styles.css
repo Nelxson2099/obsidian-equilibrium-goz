@@ -1,28 +1,24 @@
-/* EQUILIBRIUM GOZ — OBSIDIAN PLUGIN STYLING */
+/* Equilibrium GOZ Glassmorphic Styling for Obsidian */
 
 .goz-container {
   padding: 16px;
   background-color: var(--background-primary);
   color: var(--text-normal);
   font-family: var(--font-interface);
-  height: 100%;
-  overflow-y: auto;
 }
 
 .goz-header-banner {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(99, 102, 241, 0.15));
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 20px;
-  position: relative;
-  overflow: hidden;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(16, 185, 129, 0.15));
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 16px;
 }
 
 .goz-level-info {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
 }
 
@@ -37,136 +33,137 @@
 }
 
 .goz-level-title {
-  font-size: 16px;
   font-weight: 700;
+  font-size: 14px;
+  color: var(--text-normal);
 }
 
 .goz-level-rank {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
 .goz-xp-badge {
-  background: rgba(16, 185, 129, 0.2);
-  color: #10B981;
-  border: 1px solid rgba(16, 185, 129, 0.4);
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #10b981;
   padding: 4px 10px;
   border-radius: 20px;
-  font-size: 12px;
   font-weight: 700;
+  font-size: 12px;
 }
 
 .goz-progress-bar-bg {
   width: 100%;
   height: 8px;
-  background: rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .goz-progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #10B981, #6366F1);
-  transition: width 0.4s ease-in-out;
+  background: linear-gradient(90deg, #6366f1, #10b981);
+  border-radius: 4px;
+  transition: width 0.3s ease;
 }
 
-/* TABS */
 .goz-tabs {
   display: flex;
   gap: 8px;
+  margin-bottom: 16px;
   border-bottom: 1px solid var(--background-modifier-border);
-  padding-bottom: 10px;
-  margin-bottom: 20px;
-  overflow-x: auto;
+  padding-bottom: 8px;
 }
 
 .goz-tab-btn {
   background: transparent;
   border: none;
   color: var(--text-muted);
-  padding: 8px 14px;
-  border-radius: 10px;
-  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 13px;
   transition: all 0.2s ease;
 }
 
 .goz-tab-btn:hover {
-  background: var(--background-modifier-hover);
+  background-color: var(--background-modifier-hover);
   color: var(--text-normal);
 }
 
 .goz-tab-btn.active {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10B981;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background-color: rgba(99, 102, 241, 0.2);
+  color: #6366f1;
+  font-weight: 600;
 }
 
-/* ZONES CARDS */
 .goz-zones-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .goz-zone-card {
-  padding: 14px;
-  border-radius: 14px;
-  border: 1px solid var(--background-modifier-border);
-  background: var(--background-secondary);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  background-color: var(--background-secondary);
+  border-radius: 10px;
+  padding: 12px;
+  border-left: 4px solid var(--interactive-accent);
 }
 
-.goz-zone-card:hover {
-  transform: translateY(-2px);
-}
+.goz-zone-card.zone-1 { border-left-color: #6366f1; }
+.goz-zone-card.zone-2 { border-left-color: #ef4444; }
+.goz-zone-card.zone-3 { border-left-color: #f59e0b; }
+.goz-zone-card.zone-4 { border-left-color: #10b981; }
 
 .goz-zone-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  align-items: center;
+  margin-bottom: 6px;
 }
+
+.goz-zone-title-1 { color: #6366f1; font-weight: 700; }
+.goz-zone-title-2 { color: #ef4444; font-weight: 700; }
+.goz-zone-title-3 { color: #f59e0b; font-weight: 700; }
+.goz-zone-title-4 { color: #10b981; font-weight: 700; }
 
 .goz-zone-count {
-  font-size: 18px;
-  font-weight: 800;
+  font-weight: 700;
+  font-size: 14px;
 }
 
-/* GTD INBOX */
 .goz-gtd-box {
-  background: var(--background-secondary);
-  border: 1px solid var(--background-modifier-border);
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 20px;
+  background-color: var(--background-secondary);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 16px;
 }
 
 .goz-input-group {
   display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .goz-input {
   flex: 1;
-  background: var(--background-primary);
+  background-color: var(--background-primary);
   border: 1px solid var(--background-modifier-border);
-  border-radius: 10px;
-  padding: 10px 14px;
+  border-radius: 6px;
+  padding: 8px;
   color: var(--text-normal);
-  font-size: 14px;
+  width: 100%;
 }
 
 .goz-btn-primary {
-  background: #10B981;
-  color: #0E0F14;
+  background-color: #6366f1;
+  color: white;
   border: none;
-  font-weight: 700;
-  padding: 10px 18px;
-  border-radius: 10px;
+  padding: 8px 14px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 600;
   transition: opacity 0.2s ease;
 }
 
@@ -176,49 +173,60 @@
 
 .goz-context-chips {
   display: flex;
-  gap: 6px;
   flex-wrap: wrap;
+  gap: 6px;
+
 }
 
 .goz-chip {
+  padding: 4px 8px;
+  border-radius: 12px;
   font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 20px;
   cursor: pointer;
-  border: 1px solid transparent;
-  transition: all 0.2s ease;
+  font-weight: 600;
+  background-color: var(--background-modifier-hover);
+  color: var(--text-muted);
+}
+
+.goz-chip:hover {
+  color: var(--text-normal);
 }
 
 .goz-task-item {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 10px 14px;
-  background: var(--background-primary);
-  border: 1px solid var(--background-modifier-border);
-  border-radius: 12px;
+  align-items: center;
+  background-color: var(--background-secondary);
+  padding: 10px;
+  border-radius: 8px;
   margin-bottom: 8px;
 }
 
-/* HABITS */
 .goz-habit-card {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  background: var(--background-secondary);
-  border: 1px solid var(--background-modifier-border);
-  border-radius: 14px;
-  margin-bottom: 10px;
+  align-items: center;
+  background-color: var(--background-secondary);
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
 }
 
 .goz-habit-btn {
-  background: rgba(16, 185, 129, 0.2);
-  color: #10B981;
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #10b981;
   border: 1px solid rgba(16, 185, 129, 0.4);
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 600;
 }
+
+.goz-habit-btn:hover {
+  background-color: rgba(16, 185, 129, 0.3);
+}
+
+.goz-opacity-muted { opacity: 0.6; font-size: 11px; }
+.goz-mt-20 { margin-top: 20px; }
+.goz-mb-10 { margin-bottom: 10px; }
+.goz-fw-700 { font-weight: 700; }
