@@ -34,24 +34,115 @@ var import_obsidian2 = require("obsidian");
 // src/view.ts
 var import_obsidian = require("obsidian");
 
+// src/i18n.ts
+var USER_LOCALE = (typeof window !== "undefined" && window.localStorage && window.localStorage.getItem("language") || "en").toLowerCase();
+var IS_ES = USER_LOCALE.startsWith("es");
+var I18N = {
+  en: {
+    level: "Level",
+    streak: "\u{1F525} Streak: {days} days (Active Multiplier)",
+    tabDashboard: "\u{1F4CA} Dashboard",
+    tabGTD: "\u{1F4E5} GTD Inbox ({count})",
+    tabHabits: "\u{1F33F} Habits",
+    tabExpansion: "\u{1F680} Expansion",
+    expRegistered: "Expansions logged in {zone}",
+    recentExpTitle: "\u26A1 Recent Logged Expansions",
+    noActivities: "No activities logged yet. Add one in the Expansion tab!",
+    zoneConfort: "Comfort",
+    zoneMiedo: "Fear",
+    zoneAprendizaje: "Learning",
+    zoneCrecimiento: "Growth",
+    lvlNovicio: "Novice",
+    lvlIniciado: "Initiate",
+    lvlExplorador: "Explorer",
+    lvlDesafiante: "Challenger",
+    lvlEstratega: "Strategist",
+    lvlConquistador: "Conqueror",
+    lvlCampeon: "Champion",
+    lvlTitan: "Titan",
+    lvlLeyenda: "Legend",
+    lvlTrascendente: "Transcendent"
+  },
+  es: {
+    level: "Nivel",
+    streak: "\u{1F525} Racha: {days} d\xEDas (Multiplicador Activo)",
+    tabDashboard: "\u{1F4CA} Dashboard",
+    tabGTD: "\u{1F4E5} GTD Inbox ({count})",
+    tabHabits: "\u{1F33F} H\xE1bitos",
+    tabExpansion: "\u{1F680} Expansi\xF3n",
+    expRegistered: "Expansiones registradas en {zone}",
+    recentExpTitle: "\u26A1 \xDAltimas Expansiones Registradas",
+    noActivities: "A\xFAn no has registrado actividades. \xA1Haz un registro en la pesta\xF1a Expansi\xF3n!",
+    zoneConfort: "Confort",
+    zoneMiedo: "Miedo",
+    zoneAprendizaje: "Aprendizaje",
+    zoneCrecimiento: "Crecimiento",
+    lvlNovicio: "Novicio",
+    lvlIniciado: "Iniciado",
+    lvlExplorador: "Explorador",
+    lvlDesafiante: "Desafiante",
+    lvlEstratega: "Estratega",
+    lvlConquistador: "Conquistador",
+    lvlCampeon: "Campe\xF3n",
+    lvlTitan: "Tit\xE1n",
+    lvlLeyenda: "Leyenda",
+    lvlTrascendente: "Trascendente"
+  }
+};
+function t(key, vars = {}) {
+  let str = (IS_ES ? I18N.es[key] : I18N.en[key]) || I18N.en[key] || key;
+  for (const v in vars) {
+    str = str.replace(new RegExp(`\\{${v}\\}`, "g"), String(vars[v]));
+  }
+  return str;
+}
+
 // src/constants.ts
 var ZONES = [
-  { id: 1, name: "Confort", color: "#6366F1", icon: "\u{1F3E0}", bg: "rgba(99, 102, 241, 0.15)" },
-  { id: 2, name: "Miedo", color: "#EF4444", icon: "\u26A1", bg: "rgba(239, 68, 68, 0.15)" },
-  { id: 3, name: "Aprendizaje", color: "#F59E0B", icon: "\u{1F9E0}", bg: "rgba(245, 158, 11, 0.15)" },
-  { id: 4, name: "Crecimiento", color: "#10B981", icon: "\u{1F680}", bg: "rgba(16, 185, 129, 0.15)" }
+  { id: 1, get name() {
+    return t("zoneConfort");
+  }, color: "#6366F1", icon: "\u{1F3E0}", bg: "rgba(99, 102, 241, 0.15)" },
+  { id: 2, get name() {
+    return t("zoneMiedo");
+  }, color: "#EF4444", icon: "\u26A1", bg: "rgba(239, 68, 68, 0.15)" },
+  { id: 3, get name() {
+    return t("zoneAprendizaje");
+  }, color: "#F59E0B", icon: "\u{1F9E0}", bg: "rgba(245, 158, 11, 0.15)" },
+  { id: 4, get name() {
+    return t("zoneCrecimiento");
+  }, color: "#10B981", icon: "\u{1F680}", bg: "rgba(16, 185, 129, 0.15)" }
 ];
 var LEVELS = [
-  { level: 1, minXP: 0, maxXP: 500, name: "Novicio", icon: "\u{1F331}", color: "#8892A4" },
-  { level: 2, minXP: 500, maxXP: 1200, name: "Iniciado", icon: "\u{1F33F}", color: "#3B82F6" },
-  { level: 3, minXP: 1200, maxXP: 2500, name: "Explorador", icon: "\u{1F9ED}", color: "#6366F1" },
-  { level: 4, minXP: 2500, maxXP: 4500, name: "Desafiante", icon: "\u2694\uFE0F", color: "#8B5CF6" },
-  { level: 5, minXP: 4500, maxXP: 7500, name: "Estratega", icon: "\u{1F6E1}\uFE0F", color: "#EC4899" },
-  { level: 6, minXP: 7500, maxXP: 12e3, name: "Conquistador", icon: "\u{1F525}", color: "#F59E0B" },
-  { level: 7, minXP: 12e3, maxXP: 18e3, name: "Campe\xF3n", icon: "\u{1F3C6}", color: "#10B981" },
-  { level: 8, minXP: 18e3, maxXP: 25e3, name: "Tit\xE1n", icon: "\u{1F451}", color: "#06B6D4" },
-  { level: 9, minXP: 25e3, maxXP: 35e3, name: "Leyenda", icon: "\u26A1", color: "#A855F7" },
-  { level: 10, minXP: 35e3, maxXP: 5e4, name: "Trascendente", icon: "\u{1F31F}", color: "#F43F5E" }
+  { level: 1, minXP: 0, maxXP: 500, get name() {
+    return t("lvlNovicio");
+  }, icon: "\u{1F331}", color: "#8892A4" },
+  { level: 2, minXP: 500, maxXP: 1200, get name() {
+    return t("lvlIniciado");
+  }, icon: "\u{1F33F}", color: "#3B82F6" },
+  { level: 3, minXP: 1200, maxXP: 2500, get name() {
+    return t("lvlExplorador");
+  }, icon: "\u{1F9ED}", color: "#6366F1" },
+  { level: 4, minXP: 2500, maxXP: 4500, get name() {
+    return t("lvlDesafiante");
+  }, icon: "\u2694\uFE0F", color: "#8B5CF6" },
+  { level: 5, minXP: 4500, maxXP: 7500, get name() {
+    return t("lvlEstratega");
+  }, icon: "\u{1F6E1}\uFE0F", color: "#EC4899" },
+  { level: 6, minXP: 7500, maxXP: 12e3, get name() {
+    return t("lvlConquistador");
+  }, icon: "\u{1F525}", color: "#F59E0B" },
+  { level: 7, minXP: 12e3, maxXP: 18e3, get name() {
+    return t("lvlCampeon");
+  }, icon: "\u{1F3C6}", color: "#10B981" },
+  { level: 8, minXP: 18e3, maxXP: 25e3, get name() {
+    return t("lvlTitan");
+  }, icon: "\u{1F451}", color: "#06B6D4" },
+  { level: 9, minXP: 25e3, maxXP: 35e3, get name() {
+    return t("lvlLeyenda");
+  }, icon: "\u26A1", color: "#A855F7" },
+  { level: 10, minXP: 35e3, maxXP: 5e4, get name() {
+    return t("lvlTrascendente");
+  }, icon: "\u{1F31F}", color: "#F43F5E" }
 ];
 var CONTEXTS = [
   { tag: "@ordenador", label: "Ordenador", color: "#10B981" },
@@ -92,27 +183,28 @@ var EquilibriumGOZView = class extends import_obsidian.ItemView {
     const badge = levelInfo.createDiv({ cls: "goz-level-badge" });
     badge.createSpan({ cls: "goz-level-icon", text: currentLevel.icon });
     const titleBox = badge.createDiv();
-    titleBox.createDiv({ cls: "goz-level-title", text: `Nivel ${currentLevel.level} \u2014 ${currentLevel.name}` });
-    titleBox.createDiv({ cls: "goz-level-rank", text: `\u{1F525} Racha: ${data.streakDays} d\xEDas (Multiplicador Activo)` });
+    titleBox.createDiv({ cls: "goz-level-title", text: `${t("level")} ${currentLevel.level} \u2014 ${currentLevel.name}` });
+    titleBox.createDiv({ cls: "goz-level-rank", text: t("streak", { days: data.streakDays }) });
     levelInfo.createDiv({ cls: "goz-xp-badge", text: `${data.totalXP.toLocaleString()} XP` });
     const progressBg = header.createDiv({ cls: "goz-progress-bar-bg" });
     const progressFill = progressBg.createDiv({ cls: "goz-progress-bar-fill" });
     const progressPct = Math.min(100, Math.max(5, data.totalXP / currentLevel.maxXP * 100));
     progressFill.setCssProps({ width: `${progressPct}%` });
     const tabs = container.createDiv({ cls: "goz-tabs" });
+    const pendingCount = data.gtdTasks.filter((t2) => t2.status !== "completed").length;
     const tabList = [
-      { id: "dashboard", label: "\u{1F4CA} Dashboard" },
-      { id: "gtd", label: `\u{1F4E5} GTD Inbox (${data.gtdTasks.filter((t) => t.status !== "completed").length})` },
-      { id: "habitos", label: "\u{1F33F} H\xE1bitos" },
-      { id: "expansion", label: "\u{1F680} Expansi\xF3n" }
+      { id: "dashboard", label: t("tabDashboard") },
+      { id: "gtd", label: t("tabGTD", { count: pendingCount }) },
+      { id: "habitos", label: t("tabHabits") },
+      { id: "expansion", label: t("tabExpansion") }
     ];
-    tabList.forEach((t) => {
+    tabList.forEach((t2) => {
       const btn = tabs.createEl("button", {
-        cls: `goz-tab-btn ${this.currentTab === t.id ? "active" : ""}`,
-        text: t.label
+        cls: `goz-tab-btn ${this.currentTab === t2.id ? "active" : ""}`,
+        text: t2.label
       });
       btn.onclick = () => {
-        this.currentTab = t.id;
+        this.currentTab = t2.id;
         this.render();
       };
     });
@@ -198,16 +290,16 @@ var EquilibriumGOZView = class extends import_obsidian.ItemView {
       if (e.key === "Enter") addGTD();
     };
     el.createEl("h3", { text: "\u{1F4E5} Bandeja de Entrada" });
-    const pending = data.gtdTasks.filter((t) => t.status !== "completed");
+    const pending = data.gtdTasks.filter((t2) => t2.status !== "completed");
     if (pending.length === 0) {
       el.createEl("p", { cls: "goz-opacity-muted", text: "\xA1Inbox totalmente despejado! \u{1F680}" });
     } else {
-      pending.forEach((t) => {
+      pending.forEach((t2) => {
         const item = el.createDiv({ cls: "goz-task-item" });
-        item.createSpan({ text: `${t.title} (${t.context})` });
+        item.createSpan({ text: `${t2.title} (${t2.context})` });
         const completeBtn = item.createEl("button", { cls: "goz-btn-primary", text: "\u2713 Completar" });
         completeBtn.onclick = () => {
-          t.status = "completed";
+          t2.status = "completed";
           data.totalXP += 100;
           void this.plugin.savePluginData();
           new import_obsidian.Notice("\xA1Tarea completada! +100 XP");

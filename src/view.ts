@@ -1,6 +1,7 @@
 import { ItemView, WorkspaceLeaf, Notice } from "obsidian";
 import { GOZData, Activity, GTDTask } from "./types";
 import { ZONES, LEVELS, CONTEXTS } from "./constants";
+import { t } from "./i18n";
 import EquilibriumGOZPlugin from "./main";
 
 export const VIEW_TYPE_EQUILIBRIUM = "equilibrium-goz-view";
@@ -45,8 +46,8 @@ export class EquilibriumGOZView extends ItemView {
     const badge = levelInfo.createDiv({ cls: "goz-level-badge" });
     badge.createSpan({ cls: "goz-level-icon", text: currentLevel.icon });
     const titleBox = badge.createDiv();
-    titleBox.createDiv({ cls: "goz-level-title", text: `Nivel ${currentLevel.level} — ${currentLevel.name}` });
-    titleBox.createDiv({ cls: "goz-level-rank", text: `🔥 Racha: ${data.streakDays} días (Multiplicador Activo)` });
+    titleBox.createDiv({ cls: "goz-level-title", text: `${t("level")} ${currentLevel.level} — ${currentLevel.name}` });
+    titleBox.createDiv({ cls: "goz-level-rank", text: t("streak", { days: data.streakDays }) });
 
     levelInfo.createDiv({ cls: "goz-xp-badge", text: `${data.totalXP.toLocaleString()} XP` });
 
@@ -57,11 +58,12 @@ export class EquilibriumGOZView extends ItemView {
 
     // 2. NAV TABS
     const tabs = container.createDiv({ cls: "goz-tabs" });
+    const pendingCount = data.gtdTasks.filter(t => t.status !== 'completed').length;
     const tabList = [
-      { id: "dashboard", label: "📊 Dashboard" },
-      { id: "gtd", label: `📥 GTD Inbox (${data.gtdTasks.filter(t => t.status !== 'completed').length})` },
-      { id: "habitos", label: "🌿 Hábitos" },
-      { id: "expansion", label: "🚀 Expansión" }
+      { id: "dashboard", label: t("tabDashboard") },
+      { id: "gtd", label: t("tabGTD", { count: pendingCount }) },
+      { id: "habitos", label: t("tabHabits") },
+      { id: "expansion", label: t("tabExpansion") }
     ];
 
     tabList.forEach(t => {
