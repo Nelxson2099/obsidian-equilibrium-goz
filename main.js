@@ -35,7 +35,7 @@ var import_obsidian2 = require("obsidian");
 var import_obsidian = require("obsidian");
 
 // src/i18n.ts
-var USER_LOCALE = (typeof window !== "undefined" && window.localStorage && window.localStorage.getItem("language") || "en").toLowerCase();
+var USER_LOCALE = (typeof window !== "undefined" && (window.moment && typeof window.moment.locale === "function" && window.moment.locale() || navigator && navigator.language || "en")).toLowerCase();
 var IS_ES = USER_LOCALE.startsWith("es");
 var I18N = {
   en: {

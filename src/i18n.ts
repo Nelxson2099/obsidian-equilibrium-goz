@@ -1,4 +1,8 @@
-const USER_LOCALE = (typeof window !== "undefined" && window.localStorage && window.localStorage.getItem("language") || "en").toLowerCase();
+const USER_LOCALE = (typeof window !== "undefined" && (
+  ((window as any).moment && typeof (window as any).moment.locale === "function" && (window as any).moment.locale()) ||
+  (navigator && navigator.language) ||
+  "en"
+)).toLowerCase();
 export const IS_ES = USER_LOCALE.startsWith("es");
 
 export const I18N = {
@@ -61,3 +65,4 @@ export function t(key: keyof typeof I18N['en'], vars: Record<string, string | nu
   }
   return str;
 }
+
